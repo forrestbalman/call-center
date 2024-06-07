@@ -360,6 +360,7 @@
 						messages.pop();
 						addMessage(generateSignOffResponse(), 'techSupport');
 						phoneButtonClickable = true;
+						socket.emit('happy customer', firstName);
 					},
 					generateRandomTimeout(1500, 4000)
 				);
@@ -406,9 +407,13 @@
 
 {#if countdown}
 	{#if countdown >= 10}
-		<p class="text-light font-monospace position-absolute top-0 end-0 m-3">0:{countdown}</p>
+		<p class="text-light font-monospace fs-1 position-absolute bottom-0 start-0 m-3">
+			0:{countdown}
+		</p>
 	{:else}
-		<p class="text-light font-monospace position-absolute top-0 end-0 m-3">0:0{countdown}</p>
+		<p class="text-light font-monospace fs-1 position-absolute bottom-0 start-0 m-3">
+			0:0{countdown}
+		</p>
 	{/if}
 {/if}
 {#if !listenerReady}

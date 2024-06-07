@@ -1,6 +1,5 @@
 <script>
 	import { io } from 'socket.io-client';
-	import { goto } from '$app/navigation';
 
 	const socket = io();
 
@@ -295,7 +294,7 @@
 		}
 	});
 
-	socket.on('call ended', (name) => {
+	socket.on('happy customer', (name) => {
 		let message = `${name} just helped another happy customer! 🎉`;
 		let id = generateRandomID();
 		messages.push({ id, message });
@@ -324,8 +323,7 @@
 	});
 
 	socket.on('piece ended', () => {
-		audioCtx.close();
-		goto('/');
+		window.location.reload();
 	});
 </script>
 
@@ -342,9 +340,13 @@
 	{/if}
 	{#if countdown}
 		{#if countdown >= 10}
-			<p class="text-light font-monospace position-absolute top-0 end-0 m-3">0:{countdown}</p>
+			<p class="text-light font-monospace fs-1 position-absolute bottom-0 start-0 m-3">
+				0:{countdown}
+			</p>
 		{:else}
-			<p class="text-light font-monospace position-absolute top-0 end-0 m-3">0:0{countdown}</p>
+			<p class="text-light font-monospace fs-1 position-absolute bottom-0 start-0 m-3">
+				0:0{countdown}
+			</p>
 		{/if}
 	{/if}
 

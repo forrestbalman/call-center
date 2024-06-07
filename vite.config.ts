@@ -75,6 +75,15 @@ const webSocketServer = {
 				}
 			});
 
+			socket.on('happy customer', (name) => {
+				const listeners = users.filter((user) => user.role === 'listen');
+				if (listeners.length > 0) {
+					listeners.forEach((listener) => {
+						io.to(listener.id).emit('happy customer', name);
+					});
+				}
+			});
+
 			socket.on('angry customer', (name) => {
 				const listeners = users.filter((user) => user.role === 'listen');
 				if (listeners.length > 0) {
@@ -85,7 +94,7 @@ const webSocketServer = {
 			});
 
 			socket.on('start countdown', () => {
-				if (!countdown) {
+				if (!countdown && !countingDown) {
 					countdown = 30;
 					countingDown = true;
 					let timer = setTimeout(function count() {
