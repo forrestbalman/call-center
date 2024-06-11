@@ -34,11 +34,12 @@
 	let callerID = null;
 	let customerAnger = 0;
 
+	//for giving the user a random caller ID to distinguish them between other callers
 	function generateRandomID() {
 		return Math.floor(Math.random() * 1000000);
 	}
 
-	//for transitioning between conversations with customers
+	// for transitioning between conversations with customers
 	function amIGettingACall() {
 		//calls itself every second to check if a call is coming in
 		setTimeout(() => {
@@ -58,7 +59,7 @@
 		}, 1000);
 	}
 
-	//increments the step variable to continue the conversation
+	// increments the step variable to continue the conversation
 	function advanceConversation() {
 		//sets gettingACall to false so the phone button stops vibrating
 		if (gettingACall) {
@@ -134,10 +135,12 @@
 		amIGettingACall();
 	}
 
+	//random delays for the conversation's pacing
 	function generateRandomTimeout(min, max) {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	}
 
+	//functions (next 9) for generating the conversation's content
 	function getTechSupportGreeting() {
 		phoneButtonClickable = false;
 		const object = generateTechSupportGreeting();
@@ -380,11 +383,13 @@
 		socket.emit('call ended', firstName);
 	}
 
+	//when user connects, send the user's info to the server and checks if a listener is connected
 	socket.on('connect', () => {
 		socket.emit('userRole', 'play');
 		socket.emit('check for listener');
 	});
 
+	//when the listener connects
 	socket.on('listener connected', () => {
 		if (!dontRetriggerListenerReady) {
 			listenerReady = false;
@@ -396,10 +401,12 @@
 		}
 	});
 
+	//when the countdown starts, display the timer
 	socket.on('counting down', (time) => {
 		countdown = time;
 	});
 
+	//when the piece ends, reload the page
 	socket.on('piece ended', () => {
 		goto('/');
 	});

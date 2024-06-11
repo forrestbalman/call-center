@@ -13,10 +13,12 @@
 	let countdown;
 	let totalUsers = 0;
 
+	//generates a random ID for each sound to distinguish them from one another
 	function generateRandomID() {
 		return Math.floor(Math.random() * 1000000);
 	}
 
+	//enables sound playback and starts the audio context
 	function startSound() {
 		audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 		allowSound = true;
@@ -27,6 +29,7 @@
 		typingSounds();
 	}
 
+	//loops ambient noises
 	function noiseLoop() {
 		let noise1 = new Audio('/sounds/noise.mp3');
 		let noise2 = new Audio('/sounds/noise.mp3');
@@ -66,6 +69,7 @@
 		});
 	}
 
+	//plays printer sounds
 	async function printerSounds() {
 		let willPrinterMakeASound = Math.random();
 		if (
@@ -116,6 +120,7 @@
 		setTimeout(printerSounds, 1000);
 	}
 
+	//plays typing sounds
 	async function typingSounds() {
 		let willKeyboardMakeASound = Math.random();
 		if (
@@ -166,6 +171,7 @@
 		setTimeout(typingSounds, 1000);
 	}
 
+	//plays footstep sounds
 	async function footstepSounds() {
 		let willFootstepsMakeASound = Math.random();
 		if (willFootstepsMakeASound < 0.5) {
@@ -215,18 +221,22 @@
 		setTimeout(footstepSounds, 5000);
 	}
 
+	//starts the countdown process
 	function stopSound() {
 		socket.emit('start countdown');
 	}
 
+	//whhen the listener connects, send info to the server
 	socket.on('connect', () => {
 		socket.emit('userRole', 'listen');
 	});
 
+	//receives the total number of users from the server
 	socket.on('total users', (total) => {
 		totalUsers = total;
 	});
 
+	//when a user gets a phone call, play the phone call sound
 	socket.on('phone call', (object) => {
 		let { name, id } = object;
 		let message = `${name} is getting a call!`;
@@ -259,6 +269,7 @@
 		}
 	});
 
+	//when a user gets a voice line, play the voice line sound
 	socket.on('customer voice line', async (id) => {
 		let random = Math.floor(Math.random() * 40) + 1;
 
@@ -294,6 +305,7 @@
 		}
 	});
 
+	//when a customer has their problem solved or not, display the relevant message
 	socket.on('happy customer', (name) => {
 		let message = `${name} just helped another happy customer! 🎉`;
 		let id = generateRandomID();
@@ -318,10 +330,12 @@
 		}, 4000);
 	});
 
+	//grabs the countdown tiimer form the server
 	socket.on('counting down', (time) => {
 		countdown = time;
 	});
 
+	//reloads the page when the piece ends
 	socket.on('piece ended', () => {
 		window.location.reload();
 	});
